@@ -1,0 +1,8 @@
+name: qsensor
+dependencies:
+    - python>=3.10
+    - numpy
+    - scipy
+    - pyyaml
+    - tqdm
+    - h5py
