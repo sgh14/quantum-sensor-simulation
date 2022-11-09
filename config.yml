@@ -1,0 +1,37 @@
+############# Variables to be (potentially) predicted #############
+# Distance of the two particle system to the chain of qubits
+D: # m
+  low: 1.0e-9
+  high: 1.0e-8
+# Polar angle of the second particle with respect to the first one
+theta: # degrees
+  low: 0
+  high: 180
+# Distance between the two particles
+d_s: # m
+  low: 2.0e-10
+  high: 4.0e-10
+##################### Parameters to be tuned #####################
+# Distance between qubits
+d_c: 1.0e-10 # m
+# Magnetic field
+B: 1.0e-6 # T
+# Evolution time
+t: 1.0e-1 # s
+# Entanglement between qubits
+entanglement: false
+################### Parameters to be minimized ###################
+# Number of measures
+nmeasures: 1000
+# Number of qubits
+nqubits: 3
+######################## Fixed parameters ########################
+# Gyromagnetic ratio of the particles (choose a molecule)
+gamma_s: 1.0e+8 
+# Gyromagnetic ratio of the qubits (NV centers)
+gamma_c: 2.0e+8 # rad/(s*T)
+# Temperature
+T: 294.15 # K
+######################## Other parameters ########################
+# Number of configurations
+nconfigs: 10000
