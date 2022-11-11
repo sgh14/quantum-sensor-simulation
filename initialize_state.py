@@ -1,10 +1,12 @@
 import numpy as np
 from scipy import linalg
 from scipy.constants import Boltzmann
+from numba import njit, objmode
 
 from hamiltonians import get_particles_spin_operators, get_system_hamiltonian
 
 
+@njit
 def initialize_state(nqubits, gamma_s, B, T, entanglement):
     ket_0_c = np.zeros((1, 2**nqubits)); ket_0_c[0, 0] = 1.0
     ket_1_c = np.zeros((1, 2**nqubits)); ket_1_c[0,-1] = 1.0
@@ -12,7 +14,9 @@ def initialize_state(nqubits, gamma_s, B, T, entanglement):
     beta = 1/(T*Boltzmann)
     S_a, S_b = get_particles_spin_operators(0)
     H_s = get_system_hamiltonian(S_a, S_b, gamma_s, B)
-    rho_s = linalg.expm(-beta*H_s)
+    with objmode(rho_s='complex128[:, :]'):
+        rho_s = linalg.expm(-beta*H_s)
+
     rho_s = rho_s/np.trace(rho_s)
     # Camera density matrix (rho = ket{GHZ}bra{GHZ} or ket{0}bra{0})
     c_state = (ket_0_c + ket_1_c)/np.sqrt(2) if entanglement else ket_0_c
