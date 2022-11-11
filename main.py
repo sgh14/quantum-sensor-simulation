@@ -1,6 +1,7 @@
 import argparse
 import yaml
 import numpy as np
+from numpy.random import uniform
 
 from simulate import simulate
 from save_results import save_results
@@ -24,8 +25,13 @@ def main():
     with open(args.config_file, 'r') as config_file:
         config = yaml.safe_load(config_file)
 
+    nconfigs = config['nconfigs']
     config['theta']['low'] = np.radians(config['theta']['low'])
     config['theta']['high'] = np.radians(config['theta']['high'])
+    for varname in ('D', 'theta', 'd_s'):
+        var = config.pop(varname)
+        config[varname + '_vals'] = uniform(var['low'], var['high'], nconfigs)
+        
     # measures, labels = 
     measures = simulate(**config)
     # parameters = 

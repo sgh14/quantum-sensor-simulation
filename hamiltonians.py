@@ -87,11 +87,9 @@ def dipole_dipole_factor(r, theta, gamma_1, gamma_2):
     return g
 
 
-def get_interaction_hamiltonian(d_c, d_s, D, theta, S_a, S_b, S, gamma_s, gamma_c):
-    nqubits = S.shape[0]
+def get_interaction_hamiltonian(positions_qubits, d_s, D, theta, S_a, S_b, S, gamma_s, gamma_c):
     # Get positions
     position_a, position_b = get_particles_coordinates(D, d_s, theta)
-    positions_qubits = get_qubits_coordinates(nqubits, d_c)
     # Get relative polar coordinates
     r_a_qubits, theta_a_qubits = cartesian2polar(position_a - positions_qubits)
     r_b_qubits, theta_b_qubits = cartesian2polar(position_b - positions_qubits)

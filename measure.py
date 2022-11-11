@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.random import choice
 
 
 def partial_trace(A, subsystems):
@@ -31,7 +32,7 @@ def get_probabilities(rho_f):
 def measure(states, probabilities, nmeasures):
     # Sample from states according to probabilities
     indices = list(range(states.shape[0]))
-    chosen_indices = np.random.choice(indices, size=nmeasures, p=probabilities)
+    chosen_indices = choice(indices, size=nmeasures, p=probabilities)
     measures = states[chosen_indices]
 
     return measures

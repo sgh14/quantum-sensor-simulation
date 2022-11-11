@@ -1,5 +1,4 @@
 import numpy as np
-from numpy import random
 import itertools as it
 from tqdm import tqdm
 
@@ -10,9 +9,9 @@ from measure import *
 
 
 def simulate(
-    D,
-    theta,
-    d_s,
+    D_vals,
+    theta_vals,
+    d_s_vals,
     d_c,
     gamma_s,
     gamma_c,
@@ -31,14 +30,13 @@ def simulate(
     S = get_qubits_spin_operators(nqubits)
     H_c = get_camera_hamiltonian(S, gamma_c, B)
     H_s = get_system_hamiltonian(S_a, S_b, gamma_s, B)
-    D_vals = random.uniform(D['low'], D['high'], nconfigs)
-    theta_vals = random.uniform(theta['low'], theta['high'], nconfigs)
-    d_s_vals = random.uniform(d_s['low'], d_s['high'], nconfigs)
+    positions_qubits = get_qubits_coordinates(nqubits, d_c)
     measures = np.empty((nconfigs, nmeasures, nqubits))
     for i in tqdm(range(nconfigs)):
-        D_i, theta_i, d_s_i = D_vals[i], theta_vals[i], d_s_vals[i]
+        D, theta, d_s = D_vals[i], theta_vals[i], d_s_vals[i]
         H_cs = get_interaction_hamiltonian(
-            d_c, d_s_i, D_i, theta_i, S_a, S_b, S, gamma_s, gamma_c
+            positions_qubits, d_s, D, theta,
+            S_a, S_b, S, gamma_s, gamma_c
         )
         H_total = H_c + H_s + H_cs
         rho_t = time_evolution(rho_0, H_total, t)

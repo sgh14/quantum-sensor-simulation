@@ -1,6 +1,6 @@
 name: qsensor
 dependencies:
-    - python>=3.10
+    - python
     - numpy
     - scipy
     - pyyaml
