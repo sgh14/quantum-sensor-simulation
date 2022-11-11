@@ -24,7 +24,7 @@ entanglement: false
 # Number of measures
 nmeasures: 1000
 # Number of qubits
-nqubits: 3
+nqubits: 5
 ######################## Fixed parameters ########################
 # Gyromagnetic ratio of the particles (choose a molecule)
 gamma_s: 1.0e+8 
@@ -34,4 +34,4 @@ gamma_c: 2.0e+8 # rad/(s*T)
 T: 294.15 # K
 ######################## Other parameters ########################
 # Number of configurations
-nconfigs: 10000
+nconfigs: 250000

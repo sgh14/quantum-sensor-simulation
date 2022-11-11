@@ -1,5 +1,5 @@
-# Quantum-sensor-simulation
-Simulate the interaction between a two particle system and a chain of qubits
+# Quantum-sensor-simulation (python)
+Simulate the interaction between a two particle system and a chain of qubits using python
 
 ## Set up
 
