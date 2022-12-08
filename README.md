@@ -1,7 +1,7 @@
 # Quantum-sensor-simulation
 Simulate the interaction between a two particle system and a chain of qubits.
 
-<p align="center"><img title="Sensor diagram" src="images/qsensor_diagram.png" width=75%></p>
+<p align="center"><img title="Sensor diagram" src="images/qsensor_diagram.png" width=50%></p>
 
 ## Set up
 
