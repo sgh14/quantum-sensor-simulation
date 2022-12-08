@@ -40,6 +40,6 @@ def plot_distribution(basis, probabilities, D_vals, plot_file):
     ax.ticklabel_format(style='sci', axis='x', scilimits=(-1,1), useMathText=True)
     ax.set_xlabel('$D\;(\mathrm{m})$')
     ax.set_ylabel('$\\langle\\sigma_z\\rangle$')
-    ax.set_title('Spin mean values ($\hbar/2 = 1$)', pad=50)
+    ax.set_title('Spin mean values ($0\equiv \hbar/2,\; 1\equiv-\hbar/2$)', pad=50)
     fig.savefig(file_name + '_mean_vals' + file_extension)
     
