@@ -2,7 +2,7 @@
 # Distance of the two particle system to the chain of qubits
 D: # m
   low: 1.0e-10
-  high: 1.0e-9
+  high: 2.0e-9
 # Polar angle of the second particle with respect to the first one
 theta: # degrees
   low: 0
@@ -21,8 +21,6 @@ t: 1.0e-1 # s
 # Entanglement between qubits
 entanglement: false
 ################### Parameters to be minimized ###################
-# # Number of measures
-# nmeasures: 1
 # Number of qubits
 nqubits: 3
 ######################## Fixed parameters ########################
