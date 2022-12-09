@@ -12,7 +12,7 @@ def plot_probs(ax, basis, probabilities, D_vals):
 
 def plot_mean_vals(ax, basis, probabilities, D_vals):
     mean_vals = np.einsum('jr, ij -> ir', basis, probabilities)
-    p = ax.plot(D_vals, mean_vals)
+    p = ax.plot(D_vals, mean_vals, alpha=0.6)
 
     return ax, p
 
