@@ -21,8 +21,8 @@ t: 1.0e-1 # s
 # Entanglement between qubits
 entanglement: false
 ################### Parameters to be minimized ###################
-# Number of qubits
-nqubits: 3
+# Number of qubits (list of integers)
+nqubits: [3]
 ######################## Fixed parameters ########################
 # Gyromagnetic ratio of the particles (choose a molecule)
 gamma_s: 1.0e+8 # rad/(s*T)
@@ -31,5 +31,5 @@ gamma_c: 2.0e+8 # rad/(s*T)
 # Temperature
 T: 294.15 # K
 ######################## Other parameters ########################
-# Number of configurations
-nconfigs: 1000
+# Number of configurations (list of integers)
+nconfigs: [1000]

@@ -7,7 +7,7 @@ import itertools as it
 
 from simulate import simulate
 from save_results import save_results
-from plot_distribution import plot_distribution
+from plot_distribution import add_suffix, plot_distribution
 
 
 def parse_commandline():
@@ -35,25 +35,50 @@ def parse_commandline():
     return parser.parse_args()
 
 
+def generate_kwargs(config_dict, nqubits, nconfigs):
+    kwargs = config_dict.copy()
+    kwargs['nqubits'], kwargs['nconfigs'] = nqubits, nconfigs
+    for varname in ('D', 'theta', 'd_s'):
+        var = kwargs.pop(varname)
+        kwargs[varname + '_vals'] = uniform(var['low'], var['high'], nconfigs)
+
+    kwargs['theta_vals'] = np.radians(kwargs['theta_vals'])
+
+    return kwargs
+
+
+def get_camera_basis(nqubits):
+    spin_levels = (0, 1)  # 0 = +, 1 = -
+    camera_basis = np.array(list(it.product(spin_levels, repeat=nqubits)))
+
+    return camera_basis
+
+
+def get_labels(kwargs):
+    varnames = ('D', 'theta', 'd_s')
+    labels = np.stack([kwargs[vname + '_vals'] for vname in varnames], axis=1)
+    
+    return labels
+
+
 def main():
     args = parse_commandline()
+    o_file, p_file = args.output_file, args.plot_file
     with open(args.config_file, 'r') as config_file:
         c = yaml.safe_load(config_file)
 
-    nconfigs = c['nconfigs']
-    c['theta']['low'] = np.radians(c['theta']['low'])
-    c['theta']['high'] = np.radians(c['theta']['high'])
-    labels = np.empty((nconfigs, 3))
-    for i, varname in enumerate(('D', 'theta', 'd_s')):
-        var = c.pop(varname)
-        c[varname + '_vals'] = uniform(var['low'], var['high'], nconfigs)
-        labels[:, i] = c[varname + '_vals']
-        
-    probabilities = simulate(**c)
-    spin_levels = (0, 1)  # 0 = +, 1 = -
-    camera_basis = np.array(list(it.product(spin_levels, repeat=c['nqubits'])))
-    save_results(camera_basis, probabilities, labels, args.output_file)
-    plot_distribution(camera_basis, probabilities, c['D_vals'], args.plot_file)
+    nqubits_vals, nconfigs_vals = c['nqubits'], c['nconfigs']
+    nsims = len(nqubits_vals)*len(nconfigs_vals)
+    for nqubits in nqubits_vals:
+        for nconfigs in nconfigs_vals:
+            print(f'Simulating {nconfigs} configurations for {nqubits} qubits:')
+            kwargs = generate_kwargs(c, nqubits, nconfigs)
+            probabilities = simulate(**kwargs)
+            camera_basis = get_camera_basis(nqubits)
+            labels = get_labels(kwargs)
+            suffix = '' if nsims == 1 else f'_{nqubits}_{nconfigs}'
+            save_results(camera_basis, probabilities, labels, add_suffix(o_file, suffix))
+            plot_distribution(camera_basis, probabilities, kwargs['D_vals'], add_suffix(p_file, suffix))
     
 
 if __name__ == "__main__":

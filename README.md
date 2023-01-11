@@ -31,6 +31,8 @@ The following plots are obtained when running
 $ python main.py -c config.yml -p images/distribution.png
 ```
 
-<p align="center"><img title="distribution_probs" src="images/distribution_probs.png" width=75%></p>
+<p align="center"><img title="distribution_probs" src="images/distribution_state_probs.png" width=75%></p>
 
-<p align="center"><img title="distribution_mean_vals" src="images/distribution_mean_vals.png" width=75%></p>
+<p align="center"><img title="distribution_mean_vals" src="images/distribution_spin_probs.png" width=75%></p>
+
+<p align="center"><img title="distribution_mean_vals" src="images/distribution_spin_mean_vals.png" width=75%></p>
