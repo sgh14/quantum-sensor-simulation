@@ -6,3 +6,4 @@ dependencies:
     - pyyaml
     - tqdm
     - h5py
+    - matplotlib
