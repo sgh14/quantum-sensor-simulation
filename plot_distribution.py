@@ -35,7 +35,7 @@ def plot_spin_probs(basis, probabilities, D_vals, file):
     ax.set_ylim(0, 1) 
     ax.ticklabel_format(style='sci', axis='x', scilimits=(-1,1), useMathText=True)
     ax.set_xlabel('$D\;(\mathrm{m})$')
-    ax.set_ylabel('$p(\\sigma_z=\hbar/2)$')
+    ax.set_ylabel('$p(S_z=\hbar/2)$')
     fig.savefig(file)
 
 
@@ -51,7 +51,7 @@ def plot_spin_mean_vals(basis, probabilities, D_vals, file):
     ax.set_ylim(-1, 1) 
     ax.ticklabel_format(style='sci', axis='x', scilimits=(-1,1), useMathText=True)
     ax.set_xlabel('$D\;(\mathrm{m})$')
-    ax.set_ylabel('$\\langle\\sigma_z\\rangle\; (\hbar/2)$')
+    ax.set_ylabel('$\\langle S_z\\rangle\; (\hbar/2)$')
     fig.savefig(file)
 
 
