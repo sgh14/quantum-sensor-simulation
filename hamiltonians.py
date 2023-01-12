@@ -65,9 +65,9 @@ def get_qubits_spin_operators(nqubits):
 def get_camera_hamiltonian(S, gamma_c, B):
     omega = -gamma_c*B
     S_x, S_z = S[:, 0], S[:, 2]
-    # H_c = sum_{i, j} omega/2*S_iz + lambdas(i,j)*dot(S_ix, S_jx)
+    # H_c = sum_{i} omega/2*S_iz + omega/10*dot(S_ix, S_(i+1)x)
     H_c = omega/2*np.einsum('ipq -> pq', S_z)\
-        + omega/10*np.einsum('ipr, jrq -> pq', S_x, S_x)  # TODO: caso i=j???
+        + omega/10*np.einsum('ipr, irq -> pq', S_x[:-1], S_x[1:])
 
     return H_c
 
@@ -82,7 +82,7 @@ def get_system_hamiltonian(S_a, S_b, gamma_s, B):
 
 def dipole_dipole_factor(r, theta, gamma_1, gamma_2):
     c = -mu_0/(4*np.pi)*gamma_1*gamma_2
-    g = c*(1-3*np.cos(theta)**2)/r**3
+    g = c*(3*np.cos(theta)**2 - 1)/r**3
 
     return g
 
