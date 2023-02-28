@@ -2,7 +2,7 @@ import numpy as np
 from numpy.random import choice
 
 
-def partial_trace_with_reshape(A, subsystems):
+def partial_trace(A, subsystems):
     partial_A = A.copy()
     n = A.shape[0]
     for k, subsystem in enumerate(sorted(subsystems)):
@@ -21,26 +21,8 @@ def partial_trace_with_reshape(A, subsystems):
     return partial_A
 
 
-def partial_trace_without_reshape(rho, subsystems):
-    partial_rho = rho.copy()
-    for k, subsystem in enumerate(sorted(subsystems)):
-        n = partial_rho.shape[0] 
-        i = subsystem - k
-        dim_a = 2**i
-        dim_b = 2
-        dim_c = n//2**(i+1)
-        I_a = np.identity(dim_a)
-        I_b = np.identity(dim_b)
-        I_c = np.identity(dim_c)
-        L = np.array([np.kron(np.kron(I_a, b_i), I_c) for b_i in I_b])
-        R = np.array([np.kron(np.kron(I_a, b_i.reshape(-1, 1)), I_c) for b_i in I_b])
-        partial_rho = np.einsum('ipl, lm, imq -> pq', L, partial_rho, R)
-
-    return partial_rho
-
-
 def get_probabilities(rho_f):
-    rho_f_camera = partial_trace_with_reshape(rho_f, subsystems=[0, 1])
+    rho_f_camera = partial_trace(rho_f, subsystems=[0, 1])
     probabilities = np.diag(rho_f_camera)
     # probabilities = probabilities/np.sum(probabilities)
 
