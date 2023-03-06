@@ -21,16 +21,11 @@ def parse_commandline():
         help="path to YAML configuration file with simulation options")
 
     parser.add_argument(
-        "--output_file",
+        "--output_folder",
         "-o",
-        default=os.path.join('data', 'output.h5'),
-        help="path to the .h5 file to store the results")
+        default='data', # os.path.join('data', 'output.h5'),
+        help="path to the folder to store the results")
 
-    parser.add_argument(
-        "--plot_file",
-        "-p",
-        default=os.path.join('data', 'distribution.png'),
-        help="path to the file to save the plot of the distribution")
 
     return parser.parse_args()
 
@@ -63,7 +58,9 @@ def get_labels(kwargs):
 
 def main():
     args = parse_commandline()
-    o_file, p_file = args.output_file, args.plot_file
+    os.makedirs(args.output_folder, exist_ok=True)
+    o_file = os.path.join(args.output_folder, 'output.h5')
+    p_file = os.path.join(args.output_folder, 'dist.png')
     with open(args.config_file, 'r') as config_file:
         c = yaml.safe_load(config_file)
 
@@ -77,8 +74,9 @@ def main():
             camera_basis = get_camera_basis(nqubits)
             labels = get_labels(kwargs)
             suffix = '' if nsims == 1 else f'_{nqubits}_{nconfigs}'
-            save_results(camera_basis, probabilities, labels, add_suffix(o_file, suffix))
-            plot_distribution(camera_basis, probabilities, kwargs['D_vals'], add_suffix(p_file, suffix))
+            results = (camera_basis, probabilities, labels)
+            save_results(*results, add_suffix(o_file, suffix))
+            plot_distribution(*results, add_suffix(p_file, suffix))
     
 
 if __name__ == "__main__":
