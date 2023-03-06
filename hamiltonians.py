@@ -65,6 +65,7 @@ def get_qubits_spin_operators(nqubits):
 def get_camera_hamiltonian(S, gamma_c, B):
     omega = -gamma_c*B
     S_x, S_z = S[:, 0], S[:, 2]
+    # TODO: substitute omega/10 by dipole-dipole factors?
     # H_c = sum_{i} omega/2*S_iz + omega/10*dot(S_ix, S_(i+1)x)
     H_c = omega/2*np.einsum('ipq -> pq', S_z)\
         + omega/10*np.einsum('ipr, irq -> pq', S_x[:-1], S_x[1:])
