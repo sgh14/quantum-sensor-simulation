@@ -32,13 +32,14 @@ $ python main.py -c config.yml -p images/distribution.png
 ```
 
 <p align="center">
-<img title="dist_d_s_state_probs" src="images/dist_d_s_state_probs.png" width=32%>
-<img title="dist_D_state_probs" src="images/dist_D_state_probs.png" width=32%>
-<img title="dist_theta_state_probs" src="images/dist_theta_state_probs.png" width=32%>
+<img title="dist_d_s_state_probs" src="images/dist_d_s_state_probs.png" width=49%>
+<img title="dist_d_s_spin_probs" src="images/dist_d_s_spin_probs.png" width=49%>
 </p>
-
 <p align="center">
-<img title="dist_d_s_spin_probs" src="images/dist_d_s_spin_probs.png" width=32%>
-<img title="dist_D_spin_probs" src="images/dist_D_spin_probs.png" width=32%>
-<img title="dist_theta_spin_probs" src="images/dist_theta_spin_probs.png" width=32%>
+<img title="dist_D_state_probs" src="images/dist_D_state_probs.png" width=49%>
+<img title="dist_D_spin_probs" src="images/dist_D_spin_probs.png" width=49%>
+</p>
+<p align="center">
+<img title="dist_theta_state_probs" src="images/dist_theta_state_probs.png" width=49%>
+<img title="dist_theta_spin_probs" src="images/dist_theta_spin_probs.png" width=49%>
 </p>
