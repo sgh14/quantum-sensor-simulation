@@ -18,10 +18,10 @@ $ conda env create -f environment.yml
 Specify the parameters of the simulation using a configuration YAML file and run
 
 ```
-$ python main.py -c [config_file] -o [output_file] -p [plot_file]
+$ python main.py -c [config_file] -o [output_folder]
 ```
 
-An example of a configuration file is `config.yml`. The output file must have `.h5` extension. The parameters `output_file` and `plot_file` take default values if they are not specified.
+An example of a configuration file is `config.yml`. The parameter `output_folder` takes a default value if it is not specified.
 
 ## Example
 
