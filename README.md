@@ -5,6 +5,8 @@ Simulate the interaction between a two particle system and a chain of qubits.
 
 ## Structure
 
+<!-- TODO: update image -->
+
 <p align="center"><img title="Dependencies" src="images/dependencies.png" width=75%></p>
 
 ## Set up
@@ -28,7 +30,7 @@ An example of a configuration file is `config.yml`. The parameter `output_folder
 The following plots are obtained when running
 
 ```
-$ python main.py -c config.yml -p images/distribution.png
+$ python main.py -c config.yml
 ```
 
 <p align="center">
