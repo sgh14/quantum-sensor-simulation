@@ -7,7 +7,6 @@ from numpy.random import uniform
 
 from simulate import simulate
 from save_results import save_results
-from plot_distribution import add_suffix, plot_distribution
 
 
 def parse_commandline():
@@ -32,6 +31,13 @@ def parse_commandline():
     )
 
     return parser.parse_args()
+
+
+def add_suffix(file, suffix):
+    file_name, file_extension = os.path.splitext(file)
+    file = file_name + suffix + file_extension
+
+    return file
 
 
 def generate_coords(coord_p_ranges, nconfigs):
@@ -73,7 +79,6 @@ def main():
         basis = get_camera_basis(nsensors, spin_s)
         suffix = "" if nsims == 1 else f"_{nconfigs}"
         save_results(basis, probs, coords_p_vals, add_suffix(o_file, suffix))
-        # plot_distribution(basis, probs, coords_p_vals, add_suffix(p_file, suffix))
 
 
 if __name__ == "__main__":

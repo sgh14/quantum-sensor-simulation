@@ -62,7 +62,7 @@ def inner_dipolar_term(s, coords, gamma=gamma_e):
             dot_si_sj = np.sum(s[i] @ s[j], axis=0)
             dot_si_rij = np.einsum('kpq, k -> pq', s[i], r_ij/norm_rij)
             dot_sj_rij = np.einsum('kpq, k -> pq', s[j], r_ij/norm_rij)
-            H_d += c*(dot_si_sj - 3*dot_si_rij*dot_sj_rij)/norm_rij**3
+            H_d += c*(dot_si_sj - 3*dot_si_rij @ dot_sj_rij)/norm_rij**3
 
     return H_d
 
@@ -77,15 +77,14 @@ def external_dipolar_term(s_1, s_2, coords_1, coords_2, gamma_1=gamma_e, gamma_2
             dot_si_sj = np.sum(s_1[i] @ s_2[j], axis=0)
             dot_si_rij = np.einsum('kpq, k -> pq', s_1[i], r_ij/norm_rij)
             dot_sj_rij = np.einsum('kpq, k -> pq', s_2[j], r_ij/norm_rij)
-            H_d += c*(dot_si_sj - 3*dot_si_rij*dot_sj_rij)/norm_rij**3
+            H_d += c*(dot_si_sj - 3*dot_si_rij @ dot_sj_rij)/norm_rij**3
     
     return H_d
 
 
 def camera_hamiltonian(s, coords, B, gamma=gamma_e):
     nsensors = s.shape[0]
-    omega = gamma*B
-    H_0_c = hbar*np.sum(D*s[:, 2] @ s[:, 2] + omega*s[:, 2], axis=0)
+    H_0_c = hbar*np.sum(D*s[:, 2] @ s[:, 2] + gamma*B*s[:, 2], axis=0)
     if nsensors > 1:
         H_I_c = inner_dipolar_term(s, coords)
     else:
@@ -98,8 +97,7 @@ def camera_hamiltonian(s, coords, B, gamma=gamma_e):
 
 def system_hamiltonian(s, coords, B, gamma=gamma_e):
     nparticles = s.shape[0]
-    omega = gamma*B
-    H_0_s = hbar*omega*np.sum(s[:, 2], axis=0)
+    H_0_s = hbar*gamma*B*np.sum(s[:, 2], axis=0)
     if nparticles > 1:
         H_I_s = inner_dipolar_term(s, coords)
     else:
