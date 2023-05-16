@@ -1,23 +1,27 @@
 import numpy as np
-from scipy import linalg
-from scipy.constants import Boltzmann
-
-from hamiltonians import get_particles_spin_operators, get_system_hamiltonian
 
 
-def initialize_state(nqubits, gamma_s, B, T, entanglement):
-    ket_0_c = np.zeros((1, 2**nqubits)); ket_0_c[0, 0] = 1.0
-    ket_1_c = np.zeros((1, 2**nqubits)); ket_1_c[0,-1] = 1.0
-    # System density matrix (thermal state: rho = exp{-beta*H_s}/Tr(exp{-beta*H_s}))
-    beta = 1/(T*Boltzmann)
-    S_a, S_b = get_particles_spin_operators(0)
-    H_s = get_system_hamiltonian(S_a, S_b, gamma_s, B)
-    rho_s = linalg.expm(-beta*H_s)
-    rho_s = rho_s/np.trace(rho_s)
-    # Camera density matrix (rho = ket{GHZ}bra{GHZ} or ket{0}bra{0})
-    c_state = (ket_0_c + ket_1_c)/np.sqrt(2) if entanglement else ket_0_c
-    rho_c = np.dot(c_state.T, c_state)
-    # Global density matrix
+def system_density_matrix(nparticles, spin_p):
+    d = int((2*spin_p + 1)**nparticles)
+    rho = 1/d*np.identity(d)
+
+    return rho
+
+
+def camera_density_matrix(nsensors, spin_s):
+    ket_0_s = np.array([[0], [1], [0]]) if spin_s == 1 else np.array([[1], [0]])
+    ket_0 = 1
+    for _ in range(nsensors):
+        ket_0 = np.kron(ket_0, ket_0_s)
+
+    rho = np.dot(ket_0, ket_0.T)
+
+    return rho
+
+
+def initialize_state(nparticles, nsensors, spin_p, spin_s):
+    rho_s = system_density_matrix(nparticles, spin_p)
+    rho_c = camera_density_matrix(nsensors, spin_s)
     rho = np.kron(rho_s, rho_c)
 
     return rho

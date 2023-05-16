@@ -1,68 +1,82 @@
-from matplotlib import pyplot as plt
 import numpy as np
-from os.path import splitext
+import os
+from matplotlib import pyplot as plt
+from scipy.interpolate import griddata
 
 
 def add_suffix(file, suffix):
-    file_name, file_extension = splitext(file)
+    file_name, file_extension = os.path.splitext(file)
     file = file_name + suffix + file_extension
 
     return file
 
 
-def plot_state_probs(basis, probabilities, label, label_name, file):
-    fig, ax = plt.subplots(figsize=(10, 8)) 
-    X, Y = np.meshgrid(np.arange(basis.shape[0]), label)
-    pc = ax.pcolormesh(X, Y, probabilities, vmin=0, vmax=1)
-    labels = np.array(['$|'+str(ket.astype(int))[1:-1]+'\\rangle$' for ket in basis])
-    nticks = len(labels) if len(labels) < 2**5 else 2**5
-    xticks = np.arange(0, len(labels), len(labels)//nticks)
-    ax.set_xticks(xticks)
-    ax.set_xticklabels(labels[xticks], rotation=45)
-    ax.ticklabel_format(style='sci', axis='y', scilimits=(-1,1), useMathText=True)
-    ax.set_ylabel('$' + label_name + '\;(\mathrm{m})$')
-    fig.colorbar(pc, label='State probability')
-    fig.savefig(file)
+def plot_probs(basis, probs, coords_p, output_file):
+    nsensors, nconfigs = basis.shape[1], probs.shape[0]
+    p_0 = np.empty((nconfigs, nsensors))
+    for i in range(nconfigs):
+        for j in range(nsensors):
+            p_0[i, j] = np.sum(probs[i][basis[:, j] == 0])
 
-
-def plot_spin_probs(basis, probabilities, label, label_name, file):
-    fig, ax = plt.subplots(figsize=(10, 8))
-    # multiply each state by its probability and sum
-    probs_equal_0 = 1 - np.einsum('jr, ij -> ir', basis, probabilities)
-    p = ax.plot(label, probs_equal_0, alpha=0.6)
-    labels = [f'Qubit {i+1}' for i in range(basis.shape[1])]
-    ax.legend(p, labels, bbox_to_anchor=(0.5, 1.025), loc="lower center", ncol=6)
-    ax.set_ylim(0, 1) 
-    ax.ticklabel_format(style='sci', axis='x', scilimits=(-1,1), useMathText=True)
-    ax.set_xlabel('$' + label_name + '\;(\mathrm{m})$')
-    ax.set_ylabel('$p(S_z=\hbar/2)$')
-    fig.savefig(file)
-
-
-def plot_spin_mean_vals(basis, probabilities, label, label_name, file):
-    fig, ax = plt.subplots(figsize=(10, 8))
-    basis[basis==1] = -1
-    basis[basis==0] = 1
-    # multiply each state by its probability and sum
-    mean_vals = np.einsum('jr, ij -> ir', basis, probabilities)
-    p = ax.plot(label, mean_vals, alpha=0.6)
-    labels = [f'Qubit {i+1}' for i in range(basis.shape[1])]
-    ax.legend(p, labels, bbox_to_anchor=(0.5, 1.025), loc="lower center", ncol=6)
-    ax.set_ylim(-1, 1) 
-    ax.ticklabel_format(style='sci', axis='x', scilimits=(-1,1), useMathText=True)
-    ax.set_xlabel('$' + label_name + '\;(\mathrm{m})$')
-    ax.set_ylabel('$\\langle S_z\\rangle\; (\hbar/2)$')
-    fig.savefig(file)
-
-
-def plot_distribution(basis, probabilities, labels, plot_file):
-    labels_names = ['D', 'theta', 'd_s']
-    labels = {labels_names[i]: labels.T[i] for i in range(len(labels_names))}
-    for label_name, label in labels.items():
-        order = np.argsort(label)
-        label, probabilities = label[order], probabilities[order]
-        data = (basis, probabilities, label, label_name if label_name!='theta' else '\\theta')
-        plot_state_probs(*data, add_suffix(plot_file, '_' + label_name + '_state_probs'))
-        plot_spin_probs(*data, add_suffix(plot_file, '_' + label_name + '_spin_probs'))    
-        # plot_spin_mean_vals(*data, add_suffix(plot_file, '_' + label_name + '_spin_mean_vals'))    
+    vmin, vmax = np.min(p_0), np.max(p_0)
+    axis = {0: '$x\; (\\mathrm{m})$', 1: '$y\; (\\mathrm{m})$', 2: '$z\; (\\mathrm{m})$'}
+    planes = np.array([[0, 1], [0, 2], [1, 2]])
+    nrows, ncols = planes.shape[0], nsensors
+    nrows = 1
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(6*ncols, 4*nrows), squeeze=False)
+    for i in range(nrows):
+        for j in range(ncols):
+            c_1, c_2 = coords_p[:, planes[i, 0]], coords_p[:, planes[i, 1]]
+            C_1, C_2 = np.meshgrid(np.linspace(min(c_1), max(c_1), 1000),
+                                   np.linspace(min(c_2), max(c_2), 1000))
+            p_0_j = griddata((c_1, c_2), p_0[:, j], (C_1, C_2), method='nearest')
+            pc = axes[i, j].pcolormesh(C_1, C_2, p_0_j, cmap='magma',
+                                       vmin=vmin, vmax=vmax)
+            axes[i, j].set_aspect('equal')
+            axes[i, j].set_xlabel(axis[planes[i, 0]])
+            axes[i, j].set_ylabel(axis[planes[i, 1]])
+            axes[i, j].ticklabel_format(style='sci', axis='both', scilimits=(-1,1), useMathText=True)
+            if i == 0:
+                axes[i, j].set_title(f'Sensor {j+1}')
     
+    cb = fig.colorbar(pc, ax=axes.ravel().tolist(), label='$P(S_z = 0)$', aspect=40)
+    cb.formatter.set_powerlimits((0, 0))
+    cb.formatter.set_useMathText(True)
+    fig.savefig(output_file, bbox_inches='tight')
+
+
+def plot_mean_spin(basis, probs, coords_p, output_file):
+    mean_spin = np.einsum('jr, ij -> ir', basis, probs)
+    vmin, vmax = np.min(mean_spin), np.max(mean_spin)
+    nsensors = basis.shape[1]
+    axis = {0: '$x\; (\\mathrm{m})$', 1: '$y\; (\\mathrm{m})$', 2: '$z\; (\\mathrm{m})$'}
+    planes = np.array([[0, 1], [0, 2], [1, 2]])
+    nrows, ncols = planes.shape[0], nsensors
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16, 12))
+    for i in range(nrows):
+        for j in range(ncols):
+            c_1, c_2 = coords_p[:, planes[i, 0]], coords_p[:, planes[i, 1]]
+            C_1, C_2 = np.meshgrid(np.linspace(min(c_1), max(c_1), 1000),
+                                   np.linspace(min(c_2), max(c_2), 1000))
+            mean_spin_j = griddata((c_1, c_2), mean_spin[:, j], (C_1, C_2), method='nearest')
+            pc = axes[i, j].pcolormesh(C_1, C_2, mean_spin_j, cmap='magma',
+                                       vmin=vmin, vmax=vmax)
+            axes[i, j].set_aspect('equal')
+            axes[i, j].set_xlabel(axis[planes[i, 0]])
+            axes[i, j].set_ylabel(axis[planes[i, 1]])
+            axes[i, j].ticklabel_format(style='sci', axis='both', scilimits=(-1,1), useMathText=True)
+            if i == 0:
+                axes[i, j].set_title(f'Sensor {j+1}')
+    
+    cb = fig.colorbar(pc, ax=axes.ravel().tolist(), label='$\\langle S_z\\rangle$', aspect=40)
+    cb.formatter.set_powerlimits((0, 0))
+    cb.formatter.set_useMathText(True)
+    fig.savefig(output_file, bbox_inches='tight')
+
+
+def plot_distribution(basis, probs, coords_p_vals, output_file):
+    nparticles = coords_p_vals.shape[1]
+    for i in range(nparticles):
+        output_file_i = add_suffix(output_file, f'_particle{i + 1}')
+        # plot_mean_spin(basis, probs, coords_p_vals[:, i], output_file_i)
+        plot_probs(basis, probs, coords_p_vals[:, i], output_file_i)
