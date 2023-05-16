@@ -1,11 +1,11 @@
 particles:
-  spin: 0.5
-  coordinates:
+  spin: 0.5 # hbar
+  coordinates: # m
     # - [[xmin, xmax], [ymin, ymax], [zmin, zmax]]
     - [[-15.0e-9, 15.0e-9], [-15.0e-9, 15.0e-9], [3.75e-9, 3.75e-9]]
 sensors:
-  spin: 1
-  coordinates:
+  spin: 1 # hbar
+  coordinates: # m
   # - [x, y, z]
     - [-3.0e-9, 0, 0]
     - [      0, 0, 0]
