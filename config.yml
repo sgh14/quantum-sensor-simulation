@@ -2,17 +2,17 @@ particles:
   spin: 0.5 # hbar
   coordinates: # m
     # - [[xmin, xmax], [ymin, ymax], [zmin, zmax]]
-    - [[-15.0e-9, 15.0e-9], [-15.0e-9, 15.0e-9], [3.75e-9, 3.75e-9]]
+    - [[-5.0e-9, 5.0e-9], [-5.0e-9, 5.0e-9], [4.375e-9, 4.375e-9]]
 sensors:
   spin: 1 # hbar
   coordinates: # m
   # - [x, y, z]
-    - [-3.0e-9, 0, 0]
+    - [-3.5e-9, 0, 0]
     - [      0, 0, 0]
-    - [ 3.0e-9, 0, 0]
+    - [ 3.5e-9, 0, 0]
 # Magnetic field (z direction)
 B: 3.414e-2 # T
 # Evolution time
-t: 1.0e-2 # s
+t: 4.789e-5 # s
 # Number of configurations (list of integers)
 nconfigs: [10000]
