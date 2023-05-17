@@ -42,11 +42,10 @@ An example of a configuration file is `config.yml`. The parameter `output_folder
 $ python main.py -c config.yml
 ```
 
-<!-- <p align="center">
-<img title="dist_d_s_state_probs" src="images/dist_d_s_state_probs.png" width=49%>
-<img title="dist_d_s_spin_probs" src="images/dist_d_s_spin_probs.png" width=49%>
-</p>
 <p align="center">
+<img title="dist" src="images/dist.png" width=100%>
+</p>
+<!-- <p align="center">
 <img title="dist_D_state_probs" src="images/dist_D_state_probs.png" width=49%>
 <img title="dist_D_spin_probs" src="images/dist_D_spin_probs.png" width=49%>
 </p>
