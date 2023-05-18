@@ -53,7 +53,7 @@ def generate_coords(coord_p_ranges, nconfigs):
 
 
 def get_camera_basis(nsensors, spin_s):
-    spin_levels = np.arange(int(2*spin_s + 1))
+    spin_levels = np.arange(spin_s, -(spin_s + 1), -1)
     camera_basis = np.array(list(it.product(spin_levels, repeat=nsensors)))
 
     return camera_basis
@@ -63,7 +63,6 @@ def main():
     args = parse_commandline()
     os.makedirs(args.output_folder, exist_ok=True)
     o_file = os.path.join(args.output_folder, "output.h5")
-    p_file = os.path.join(args.output_folder, "dist.png")
     with open(args.config_file, "r") as config_file:
         c = yaml.safe_load(config_file)
 
@@ -75,7 +74,7 @@ def main():
     for nconfigs in nconfigs_vals:
         print(f"Simulating {nconfigs} configurations:")
         coords_p_vals = generate_coords(np.array(c['particles']['coordinates']), nconfigs)
-        probs = simulate(coords_p_vals, coords_s, spin_p, spin_s, c["B"], c["t"])
+        probs = simulate(coords_p_vals, coords_s, spin_p, spin_s, c["B"], c["t"]. c['init_state'])
         basis = get_camera_basis(nsensors, spin_s)
         suffix = "" if nsims == 1 else f"_{nconfigs}"
         save_results(basis, probs, coords_p_vals, add_suffix(o_file, suffix))
