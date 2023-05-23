@@ -3,8 +3,8 @@ import h5py
 
 
 def save_results(basis, probs, coords_p_vals, output_file):
-    if np.any(np.abs(np.sum(probs, axis=1) - 1) > 1e-6):
-        print('WARNING: probabilities do not add up to 1')
+    largest_diff = np.max(np.abs(np.sum(probs, axis=1) - 1))
+    print(f'WARNING: the largest difference between the sums of probabilities and 1 is {largest_diff}')
 
     nparticles = coords_p_vals.shape[1]
     with h5py.File(output_file, "w") as file:
