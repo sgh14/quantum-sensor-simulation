@@ -84,7 +84,7 @@ def external_dipolar_term(s_1, s_2, coords_1, coords_2, gamma_1=gamma_e, gamma_2
 
 def camera_hamiltonian(s, coords, B, gamma=gamma_e):
     nsensors = s.shape[0]
-    H_0_c = hbar*np.sum(D*s[:, 2] @ s[:, 2] + gamma*B*s[:, 2], axis=0)# - 2/3*hbar*D*np.identity(s.shape[-1])*nsensors
+    H_0_c = hbar*np.sum(D*s[:, 2] @ s[:, 2] - gamma*B*s[:, 2], axis=0)# - 2/3*hbar*D*np.identity(s.shape[-1])*nsensors
     if nsensors > 1:
         H_I_c = inner_dipolar_term(s, coords)
     else:
@@ -97,7 +97,7 @@ def camera_hamiltonian(s, coords, B, gamma=gamma_e):
 
 def system_hamiltonian(s, coords, B, gamma=gamma_e):
     nparticles = s.shape[0]
-    H_0_s = hbar*gamma*B*np.sum(s[:, 2], axis=0)
+    H_0_s = -hbar*gamma*B*np.sum(s[:, 2], axis=0)
     if nparticles > 1:
         H_I_s = inner_dipolar_term(s, coords)
     else:
