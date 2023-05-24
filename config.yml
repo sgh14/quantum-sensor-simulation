@@ -8,12 +8,12 @@ sensors:
   init_state: 0 # m_s or 'GHZ'
   coordinates: # m
   # - [x, y, z]
-    - [-3.5e-9, 0, 0]
-    - [      0, 0, 0]
-    - [ 3.5e-9, 0, 0]
+    - [ 2.02072594e-09,          0, 0]
+    - [-1.01036297e-09,  1.75e-09,  0]
+    - [-1.01036297e-09, -1.75e-09,  0]
 # Magnetic field (z direction)
 B: 0.05121341898643826 # T
 # Evolution time
-t: 4.80560108621743e-07 # s
+t: 1.0e-6 # s
 # Number of configurations (list of integers)
 nconfigs: [10000]
