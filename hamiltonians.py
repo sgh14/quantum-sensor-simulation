@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.constants import mu_0, hbar
 
-from constants import D, gamma_e #, sigmas
+from constants import D, gamma_e
 
 
 def sigmas(spin):
