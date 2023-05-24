@@ -74,7 +74,8 @@ def main():
     for nconfigs in nconfigs_vals:
         print(f"Simulating {nconfigs} configurations:")
         coords_p_vals = generate_coords(np.array(c['particles']['coordinates']), nconfigs)
-        probs = simulate(coords_p_vals, coords_s, spin_p, spin_s, c["B"], c["t"], c['init_state'])
+        probs = simulate(coords_p_vals, coords_s, spin_p, spin_s,
+                         c["B"], c["t"], c['sensors']['init_state'])
         basis = get_camera_basis(nsensors, spin_s)
         suffix = "" if nsims == 1 else f"_{nconfigs}"
         save_results(basis, probs, coords_p_vals, add_suffix(o_file, suffix))
